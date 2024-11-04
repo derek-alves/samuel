@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medicament_app/model/medicament.dart';
-import 'package:medicament_app/search/cubit/search_cubit.dart';
+import 'package:medicament_app/data/model/medicament.dart';
+import 'package:medicament_app/main.dart';
+import 'package:medicament_app/presentation/search/cubit/search_cubit.dart';
 
 class SelectedMedicationsPage extends StatelessWidget {
   const SelectedMedicationsPage({super.key});
@@ -52,7 +53,13 @@ class SelectedMedicationsPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: selectedMedicaments.length > 1
                             ? () {
-                                // Handle Apply logic here
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.interactions,
+                                  arguments: {
+                                    'medicaments': selectedMedicaments,
+                                  },
+                                );
                               }
                             : null, // Disable the button if only one or no medication is selected
                         child: const Text('Apply'),
@@ -64,8 +71,10 @@ class SelectedMedicationsPage extends StatelessWidget {
                   width: double.maxFinite,
                   child: OutlinedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context,
-                          '/search'); // Navigate back to the search page
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.search,
+                      ); // Navigate back to the search page
                     },
                     child: const Text('Search'),
                   ),

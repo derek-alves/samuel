@@ -2,8 +2,8 @@ import 'dart:async'; // Import to use Timer
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medicament_app/model/medicament.dart';
-import 'package:medicament_app/search/cubit/search_cubit.dart';
+import 'package:medicament_app/data/model/medicament.dart';
+import 'package:medicament_app/presentation/search/cubit/search_cubit.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -41,11 +41,11 @@ class _SearchPageState extends State<SearchPage> {
           Expanded(
             child: BlocBuilder<SearchCubit, SearchState>(
               builder: (context, state) {
-                if (state.pageState == SearchPageState.loading) {
+                if (state.pageState == PageState.loading) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state.pageState == SearchPageState.empty) {
+                } else if (state.pageState == PageState.empty) {
                   return const Center(child: Text('No medicaments found.'));
-                } else if (state.pageState == SearchPageState.selectedItems) {
+                } else if (state.pageState == PageState.selectedItems) {
                   return ListView.builder(
                     itemCount: state.selectedMedicaments.length,
                     itemBuilder: (_, index) {
@@ -57,7 +57,7 @@ class _SearchPageState extends State<SearchPage> {
                       );
                     },
                   );
-                } else if (state.pageState == SearchPageState.loaded) {
+                } else if (state.pageState == PageState.loaded) {
                   return ListView.builder(
                     itemCount: state.medicaments.length,
                     itemBuilder: (_, index) {

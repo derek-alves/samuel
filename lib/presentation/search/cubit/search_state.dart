@@ -4,7 +4,7 @@ part of 'search_cubit.dart';
 class SearchState extends Equatable {
   final List<MedicamentModel> medicaments;
   final List<MedicamentModel> selectedMedicaments;
-  final SearchPageState pageState;
+  final PageState pageState;
 
   const SearchState({
     required this.medicaments,
@@ -16,14 +16,14 @@ class SearchState extends Equatable {
     return const SearchState(
       selectedMedicaments: [],
       medicaments: [],
-      pageState: SearchPageState.initial,
+      pageState: PageState.initial,
     );
   }
 
   SearchState copyWith({
     List<MedicamentModel>? medicaments,
     List<MedicamentModel>? selectedMedicaments,
-    SearchPageState? pageState,
+    PageState? pageState,
   }) {
     return SearchState(
       selectedMedicaments: selectedMedicaments ?? this.selectedMedicaments,
@@ -40,7 +40,7 @@ class SearchState extends Equatable {
       ];
 }
 
-enum SearchPageState {
+enum PageState {
   initial,
   empty,
   loading,
