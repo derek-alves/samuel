@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:medicament_app/data/model/interaction_result.dart';
+import 'package:medicament_app/data/model/analysis_model.dart';
 import 'package:medicament_app/data/model/medicament.dart';
 import 'package:medicament_app/data/usecase/get_interaction_usecase.dart';
 import 'package:medicament_app/data/util/result.dart';

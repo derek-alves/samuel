@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:medicament_app/data/model/interaction_analysis.dart';
+import 'package:medicament_app/data/model/analysis_model.dart';
 import 'package:medicament_app/data/model/medicament.dart';
 
 class MedicationDataSource {
@@ -7,27 +7,98 @@ class MedicationDataSource {
 
   MedicationDataSource(this.dio);
 
-  Future<List<InteractionAnalysisModel>> sendMedicationsForInteractionAnalysis(
+  Future<List<AnalysisModel>> sendMedicationsForInteractionAnalysis(
       List<MedicamentModel> medications) async {
     await Future.delayed(const Duration(seconds: 2));
     return [
-      InteractionAnalysisModel(
-        id: 0,
-        medicaments: [3652639, 1607332],
-        analysis: "Não existem interações medicamentosas negativas.",
-        riskLevel: 0,
-        date: DateTime.tryParse("2024-10-11T18:43:10.101Z"),
-        aiModel: 'gemini',
+      AnalysisModel(
+        medications: [
+          MedicamentModel(
+            name: 'FENOBARBITAL',
+            id: '1058988',
+            activeSubstance: 'FENOBARBITAL, FENOBARBITAL SÓDICO',
+            manufacturer: 'LABORATÓRIO TEUTO BRASILEIRO S/A',
+            therapeuticClasses: ['ANTICONVULSIVANTES'],
+            pdfLink: '',
+          ),
+          MedicamentModel(
+            name: 'fenitoína',
+            id: '535773',
+            activeSubstance: 'FENITOÍNA',
+            manufacturer: 'CAZI QUIMICA FARMACEUTICA INDUSTRIA E COMERCIO LTDA',
+            therapeuticClasses: ['ANTICONVULSIVANTES'],
+            pdfLink: '',
+          ),
+        ],
+        interaction: InteractionModel(
+          id: 38,
+          analysis:
+              'Fenobarbital aumenta a fenitoína, mas a fenitoína reduz o fenobarbital (efeitos opostos).',
+          riskLevel: 1,
+          date: DateTime.parse('2024-11-04T03:00:00.000Z'),
+          aiModel: 'gemini',
+          idMedications: [1058988, 535773],
+        ),
       ),
-      InteractionAnalysisModel(
-        id: 0,
-        medicaments: [3652639, 1607332],
-        analysis: "Existem interações medicamentosas positivas.",
-        riskLevel: 1,
-        date: DateTime.tryParse("2024-10-11T18:43:10.101Z"),
-        aiModel: 'gemini',
-      )
+      AnalysisModel(
+        medications: [
+          MedicamentModel(
+            name: 'IBUPROFENO',
+            id: '123456',
+            activeSubstance: 'IBUPROFENO',
+            manufacturer: 'LABORATÓRIO ABC',
+            therapeuticClasses: ['ANTI-INFLAMATÓRIOS'],
+            pdfLink: '',
+          ),
+          MedicamentModel(
+            name: 'PARACETAMOL',
+            id: '654321',
+            activeSubstance: 'PARACETAMOL',
+            manufacturer: 'LABORATÓRIO XYZ',
+            therapeuticClasses: ['ANALGESICOS NAO NARCOTICOS'],
+            pdfLink: '',
+          ),
+        ],
+        interaction: InteractionModel(
+          id: 39,
+          analysis: 'Não foram detectadas interações medicamentosas negativas.',
+          riskLevel: 0,
+          date: DateTime.parse('2024-11-05T03:00:00.000Z'),
+          aiModel: 'gemini',
+          idMedications: [123456, 654321],
+        ),
+      ),
+      AnalysisModel(
+        medications: [
+          MedicamentModel(
+            name: 'AMOXICILINA',
+            id: '789123',
+            activeSubstance: 'AMOXICILINA',
+            manufacturer: 'LABORATÓRIO DEF',
+            therapeuticClasses: ['ANTIBIÓTICOS'],
+            pdfLink: '',
+          ),
+          MedicamentModel(
+            name: 'CLARITROMICINA',
+            id: '321987',
+            activeSubstance: 'CLARITROMICINA',
+            manufacturer: 'LABORATÓRIO GHI',
+            therapeuticClasses: ['ANTIBIÓTICOS'],
+            pdfLink: '',
+          ),
+        ],
+        interaction: InteractionModel(
+          id: 40,
+          analysis:
+              'O uso combinado de amoxicilina e claritromicina pode aumentar o risco de efeitos colaterais gastrointestinais.',
+          riskLevel: 1,
+          date: DateTime.parse('2024-11-06T03:00:00.000Z'),
+          aiModel: 'gemini',
+          idMedications: [789123, 321987],
+        ),
+      ),
     ];
+
     // try {
     //   final List<Map<String, dynamic>> jsonMedications =
     //       medications.map((medication) => medication.toMap()).toList();

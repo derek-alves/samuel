@@ -13,12 +13,12 @@ class InteractionResult {
   InteractionResult copyWith({
     String? message,
     bool? success,
-    List<int>? medicaments,
+    List<int>? medicamentsIds,
   }) {
     return InteractionResult(
       message: message ?? this.message,
       success: success ?? this.success,
-      medicamentsIds: medicaments ?? this.medicamentsIds,
+      medicamentsIds: medicamentsIds ?? this.medicamentsIds,
     );
   }
 }

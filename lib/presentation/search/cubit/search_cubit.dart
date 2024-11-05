@@ -14,6 +14,19 @@ class SearchCubit extends Cubit<SearchState> {
   }
   late final GetMedicamentUsecase _getMedicamentUsecase;
 
+  void deleteMedicament(String id) {
+    final selectedMedicamentNew = [...state.selectedMedicaments];
+    selectedMedicamentNew.removeWhere((element) => element.id == id);
+    emit(
+      state.copyWith(
+        selectedMedicaments: selectedMedicamentNew,
+        pageState: selectedMedicamentNew.isEmpty
+            ? PageState.initial
+            : PageState.selectedItems,
+      ),
+    );
+  }
+
   Future<void> searchMedicaments(String query) async {
     emit(state.copyWith(pageState: PageState.loading));
 
