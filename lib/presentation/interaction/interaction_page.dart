@@ -37,11 +37,11 @@ class InteractionAnalysisPage extends StatelessWidget {
                   } else if (state.pageState == PageState.loaded) {
                     final analysisData = state.interactionAnalysis;
                     return ListView.builder(
-                      itemCount: analysisData.length,
+                      itemCount: analysisData.interaction.length,
                       itemBuilder: (context, index) {
-                        final analysis = analysisData[index];
+                        final analysis = analysisData;
                         final medications = analysis.medications;
-                        final interaction = analysis.interaction;
+                        final interaction = analysis.interaction[index];
                         final riskLevel = interaction.riskLevel;
                         final analysisText = interaction.analysis;
 

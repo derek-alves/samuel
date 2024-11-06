@@ -1,153 +1,161 @@
 import 'package:dio/dio.dart';
 import 'package:medicament_app/data/model/analysis_model.dart';
 import 'package:medicament_app/data/model/medicament.dart';
+import 'package:medicament_app/data/url/api_url.dart';
 
 class MedicationDataSource {
   final Dio dio;
 
   MedicationDataSource(this.dio);
 
-  Future<List<AnalysisModel>> sendMedicationsForInteractionAnalysis(
+  Future<AnalysisModel> sendMedicationsForInteractionAnalysis(
       List<MedicamentModel> medications) async {
-    await Future.delayed(const Duration(seconds: 2));
-    return [
-      AnalysisModel(
-        medications: [
-          MedicamentModel(
-            name: 'FENOBARBITAL',
-            id: '1058988',
-            activeSubstance: 'FENOBARBITAL, FENOBARBITAL SÓDICO',
-            manufacturer: 'LABORATÓRIO TEUTO BRASILEIRO S/A',
-            therapeuticClasses: ['ANTICONVULSIVANTES'],
-            pdfLink: '',
-          ),
-          MedicamentModel(
-            name: 'fenitoína',
-            id: '535773',
-            activeSubstance: 'FENITOÍNA',
-            manufacturer: 'CAZI QUIMICA FARMACEUTICA INDUSTRIA E COMERCIO LTDA',
-            therapeuticClasses: ['ANTICONVULSIVANTES'],
-            pdfLink: '',
-          ),
-        ],
-        interaction: InteractionModel(
-          id: 38,
-          analysis:
-              'Fenobarbital aumenta a fenitoína, mas a fenitoína reduz o fenobarbital (efeitos opostos).',
-          riskLevel: 1,
-          date: DateTime.parse('2024-11-04T03:00:00.000Z'),
-          aiModel: 'gemini',
-          idMedications: [1058988, 535773],
-        ),
-      ),
-      AnalysisModel(
-        medications: [
-          MedicamentModel(
-            name: 'IBUPROFENO',
-            id: '123456',
-            activeSubstance: 'IBUPROFENO',
-            manufacturer: 'LABORATÓRIO ABC',
-            therapeuticClasses: ['ANTI-INFLAMATÓRIOS'],
-            pdfLink: '',
-          ),
-          MedicamentModel(
-            name: 'PARACETAMOL',
-            id: '654321',
-            activeSubstance: 'PARACETAMOL',
-            manufacturer: 'LABORATÓRIO XYZ',
-            therapeuticClasses: ['ANALGESICOS NAO NARCOTICOS'],
-            pdfLink: '',
-          ),
-        ],
-        interaction: InteractionModel(
-          id: 39,
-          analysis: 'Não foram detectadas interações medicamentosas negativas.',
-          riskLevel: 0,
-          date: DateTime.parse('2024-11-05T03:00:00.000Z'),
-          aiModel: 'gemini',
-          idMedications: [123456, 654321],
-        ),
-      ),
-      AnalysisModel(
-        medications: [
-          MedicamentModel(
-            name: 'AMOXICILINA',
-            id: '789123',
-            activeSubstance: 'AMOXICILINA',
-            manufacturer: 'LABORATÓRIO DEF',
-            therapeuticClasses: ['ANTIBIÓTICOS'],
-            pdfLink: '',
-          ),
-          MedicamentModel(
-            name: 'CLARITROMICINA',
-            id: '321987',
-            activeSubstance: 'CLARITROMICINA',
-            manufacturer: 'LABORATÓRIO GHI',
-            therapeuticClasses: ['ANTIBIÓTICOS'],
-            pdfLink: '',
-          ),
-        ],
-        interaction: InteractionModel(
-          id: 40,
-          analysis:
-              'O uso combinado de amoxicilina e claritromicina pode aumentar o risco de efeitos colaterais gastrointestinais.',
-          riskLevel: 1,
-          date: DateTime.parse('2024-11-06T03:00:00.000Z'),
-          aiModel: 'gemini',
-          idMedications: [789123, 321987],
-        ),
-      ),
-    ];
+    // await Future.delayed(const Duration(seconds: 2));
+    // return [
+    //   AnalysisModel(
+    //     medications: [
+    //       MedicamentModel(
+    //         name: 'FENOBARBITAL',
+    //         id: '1058988',
+    //         activeSubstance: 'FENOBARBITAL, FENOBARBITAL SÓDICO',
+    //         manufacturer: 'LABORATÓRIO TEUTO BRASILEIRO S/A',
+    //         therapeuticClasses: ['ANTICONVULSIVANTES'],
+    //         pdfLink: '',
+    //       ),
+    //       MedicamentModel(
+    //         name: 'fenitoína',
+    //         id: '535773',
+    //         activeSubstance: 'FENITOÍNA',
+    //         manufacturer: 'CAZI QUIMICA FARMACEUTICA INDUSTRIA E COMERCIO LTDA',
+    //         therapeuticClasses: ['ANTICONVULSIVANTES'],
+    //         pdfLink: '',
+    //       ),
+    //     ],
+    //     interaction: InteractionModel(
+    //       id: 38,
+    //       analysis:
+    //           'Fenobarbital aumenta a fenitoína, mas a fenitoína reduz o fenobarbital (efeitos opostos).',
+    //       riskLevel: 1,
+    //       date: DateTime.parse('2024-11-04T03:00:00.000Z'),
+    //       aiModel: 'gemini',
+    //       idMedications: [1058988, 535773],
+    //     ),
+    //   ),
+    //   AnalysisModel(
+    //     medications: [
+    //       MedicamentModel(
+    //         name: 'IBUPROFENO',
+    //         id: '123456',
+    //         activeSubstance: 'IBUPROFENO',
+    //         manufacturer: 'LABORATÓRIO ABC',
+    //         therapeuticClasses: ['ANTI-INFLAMATÓRIOS'],
+    //         pdfLink: '',
+    //       ),
+    //       MedicamentModel(
+    //         name: 'PARACETAMOL',
+    //         id: '654321',
+    //         activeSubstance: 'PARACETAMOL',
+    //         manufacturer: 'LABORATÓRIO XYZ',
+    //         therapeuticClasses: ['ANALGESICOS NAO NARCOTICOS'],
+    //         pdfLink: '',
+    //       ),
+    //     ],
+    //     interaction: InteractionModel(
+    //       id: 39,
+    //       analysis: 'Não foram detectadas interações medicamentosas negativas.',
+    //       riskLevel: 0,
+    //       date: DateTime.parse('2024-11-05T03:00:00.000Z'),
+    //       aiModel: 'gemini',
+    //       idMedications: [123456, 654321],
+    //     ),
+    //   ),
+    //   AnalysisModel(
+    //     medications: [
+    //       MedicamentModel(
+    //         name: 'AMOXICILINA',
+    //         id: '789123',
+    //         activeSubstance: 'AMOXICILINA',
+    //         manufacturer: 'LABORATÓRIO DEF',
+    //         therapeuticClasses: ['ANTIBIÓTICOS'],
+    //         pdfLink: '',
+    //       ),
+    //       MedicamentModel(
+    //         name: 'CLARITROMICINA',
+    //         id: '321987',
+    //         activeSubstance: 'CLARITROMICINA',
+    //         manufacturer: 'LABORATÓRIO GHI',
+    //         therapeuticClasses: ['ANTIBIÓTICOS'],
+    //         pdfLink: '',
+    //       ),
+    //     ],
+    //     interaction: InteractionModel(
+    //       id: 40,
+    //       analysis:
+    //           'O uso combinado de amoxicilina e claritromicina pode aumentar o risco de efeitos colaterais gastrointestinais.',
+    //       riskLevel: 1,
+    //       date: DateTime.parse('2024-11-06T03:00:00.000Z'),
+    //       aiModel: 'gemini',
+    //       idMedications: [789123, 321987],
+    //     ),
+    //   ),
+    // ];
 
-    // try {
-    //   final List<Map<String, dynamic>> jsonMedications =
-    //       medications.map((medication) => medication.toMap()).toList();
+    try {
+      final List<String> jsonMedications =
+          medications.map((medication) => medication.id).toList();
 
-    //   final response = await dio.get(
-    //     ApiUrl.getInteractions,
-    //     data: jsonMedications,
-    //   );
+      final response = await dio.get(
+        ApiUrl.getInteractions,
+        data: jsonMedications,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json', // Define o tipo de conteúdo
+          },
+        ),
+      );
 
-    //   if (isResponseOk(response)) {
-    //     return InteractionAnalysisModel.fromJson(response.data);
-    //   } else {
-    //     throw Exception(_handleResponseMessage(response.statusCode));
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response != null) {
-    //     throw Exception(_handleResponseMessage(e.response!.statusCode));
-    //   } else {
-    //     throw Exception("Erro de conexão. Verifique sua internet.");
-    //   }
-    // }
+      if (isResponseOk(response)) {
+        return AnalysisModel.fromJson(response.data);
+      } else {
+        throw Exception(_handleResponseMessage(response.statusCode));
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw Exception(_handleResponseMessage(e.response!.statusCode));
+      } else {
+        throw Exception("Erro de conexão. Verifique sua internet.");
+      }
+    }
   }
 
   Future<List<MedicamentModel>> searchMedication(String medicationName) async {
     await Future.delayed(const Duration(seconds: 1));
-    final results = _fakeMedicaments
-        .where((medicament) => medicament.name
-            .toLowerCase()
-            .contains(medicationName.toLowerCase()))
-        .toList();
-    return results;
-    // try {
-    //   final response = await _dio.get(
-    //     ApiUrl.searchMedication.replaceFirst('{{Medication}}', medicationName),
-    //   );
+    // final results = _fakeMedicaments
+    //     .where((medicament) => medicament.name
+    //         .toLowerCase()
+    //         .contains(medicationName.toLowerCase()))
+    //     .toList();
+    // return results;
+    final value =
+        ApiUrl.searchMedication.replaceFirst('{{Medication}}', medicationName);
+    try {
+      final response = await dio.get(
+        value,
+      );
 
-    //   if (isResponseOk(response)) {
-    //     final List data = response.data as List;
-    //     return data.map((json) => MedicamentModel.fromJson(json)).toList();
-    //   } else {
-    //     throw Exception(_handleResponseMessage(response.statusCode));
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response != null) {
-    //     throw Exception(_handleResponseMessage(e.response!.statusCode));
-    //   } else {
-    //     throw Exception("Erro de conexão. Verifique sua internet.");
-    //   }
-    // }
+      if (isResponseOk(response)) {
+        final List data = response.data as List;
+        return data.map((json) => MedicamentModel.fromMap(json)).toList();
+      } else {
+        throw Exception(_handleResponseMessage(response.statusCode));
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw Exception(_handleResponseMessage(e.response!.statusCode));
+      } else {
+        throw Exception("Erro de conexão. Verifique sua internet.");
+      }
+    }
   }
 
   bool isResponseOk(Response response) {

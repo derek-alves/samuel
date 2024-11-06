@@ -20,18 +20,14 @@ class _SplashPageState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // Controlador para a animação de Lottie
     _controller = AnimationController(vsync: this);
 
-    // Iniciar a animação de texto após um pequeno atraso
     Future.delayed(const Duration(seconds: 1), () {
-      // Atraso maior para iniciar a animação do texto
       setState(() {
         _showTextAnimation = true;
       });
     });
 
-    // Navega para a próxima página após 5 segundos
     Timer(const Duration(seconds: 6), () {
       Navigator.of(context).pushReplacementNamed(AppRoutes.selectedMedications);
     });
@@ -53,21 +49,18 @@ class _SplashPageState extends State<SplashScreen>
           children: [
             // Lottie animation
             Lottie.asset(
-              'assets/animation.json', // Coloque sua animação Lottie aqui
+              'assets/animation.json',
               controller: _controller,
               onLoaded: (composition) {
                 _controller
-                  ..duration = const Duration(
-                      seconds: 5) // Duração aumentada para 5 segundos
+                  ..duration = const Duration(seconds: 5)
                   ..forward();
               },
             ),
 
-            // Animated Text for app name
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children:
-                  "CompatMed Analyzer".split("").asMap().entries.map((entry) {
+              children: "Smart Bula".split("").asMap().entries.map((entry) {
                 int idx = entry.key;
                 String letter = entry.value;
                 return AnimatedOpacity(

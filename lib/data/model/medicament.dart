@@ -34,15 +34,15 @@ class MedicamentModel {
 
   factory MedicamentModel.fromMap(Map<String, dynamic> map) {
     return MedicamentModel(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      activeSubstance: map['activeSubstance'] as String,
-      isSelected: map['isSelected'] as bool,
-      manufacturer: map['manufacturer'] as String,
+      id: map['id']?.toString() ?? '',
+      name: map['name']?.toString() ?? '',
+      activeSubstance: map['activeSubstance']?.toString() ?? '',
+      isSelected: map['isSelected'] ?? false,
+      manufacturer: map['manufacturer']?.toString() ?? '',
       therapeuticClasses: List<String>.from(
-        (map['therapeuticClasses'] as List<String>),
+        (map['therapeuticClasses'] ?? <String>[]),
       ),
-      pdfLink: map['pdfLink'] as String,
+      pdfLink: map['pdfLink']?.toString() ?? '',
     );
   }
 

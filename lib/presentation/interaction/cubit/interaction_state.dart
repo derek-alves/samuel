@@ -10,11 +10,11 @@ class InteractionState extends Equatable {
 
   final PageState pageState;
   final List<MedicamentModel> selectedMedicaments;
-  final List<AnalysisModel> interactionAnalysis;
+  final AnalysisModel interactionAnalysis;
 
   factory InteractionState.initial() {
     return const InteractionState(
-      interactionAnalysis: [],
+      interactionAnalysis: AnalysisModel(interaction: [], medications: []),
       pageState: PageState.initial,
       selectedMedicaments: [],
     );
@@ -30,7 +30,7 @@ class InteractionState extends Equatable {
   InteractionState copyWith({
     PageState? pageState,
     List<MedicamentModel>? selectedMedicaments,
-    List<AnalysisModel>? interactionAnalysis,
+    AnalysisModel? interactionAnalysis,
   }) {
     return InteractionState(
       pageState: pageState ?? this.pageState,

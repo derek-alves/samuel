@@ -8,14 +8,14 @@ class GetInteractionUsecase {
 
   GetInteractionUsecase(this.medicationDataSource);
 
-  Future<Result<List<AnalysisModel>>> execute(
+  Future<Result<AnalysisModel>> execute(
       List<MedicamentModel> medicaments) async {
     try {
       final result = await medicationDataSource
           .sendMedicationsForInteractionAnalysis(medicaments);
-      return Success<List<AnalysisModel>>(result);
+      return Success<AnalysisModel>(result);
     } on Exception catch (e) {
-      return Error<List<AnalysisModel>>(e.toString());
+      return Error<AnalysisModel>(e.toString());
     }
   }
 }
