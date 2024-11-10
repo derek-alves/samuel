@@ -14,8 +14,25 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final FocusNode _focusNode = FocusNode();
+
   Timer? _debounce;
   final Duration _debounceDuration = const Duration(milliseconds: 500);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +55,7 @@ class _SearchPageState extends State<SearchPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
+              focusNode: _focusNode,
               onChanged: (query) {
                 _onSearchChanged(query, searchCubit);
               },
@@ -154,14 +172,13 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
-  }
-
   void _showBottomSheet(BuildContext context, MedicamentModel medicament) {
-    context.read<SearchCubit>().toggleSelection(medicament);
+    final cubit = context.read<SearchCubit>();
+
+    cubit.toggleSelection(medicament);
+    if (cubit.state.selectedMedicaments.length > 1) {
+      Navigator.of(context).pop();
+    }
   }
 
   Widget _buildEmptyState() {

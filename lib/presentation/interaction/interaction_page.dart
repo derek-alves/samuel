@@ -46,9 +46,19 @@ class InteractionAnalysisPage extends StatelessWidget {
                         final analysisText = interaction.analysis;
 
                         return AnalysisCard(
-                            medications: medications,
-                            riskLevel: riskLevel,
-                            analysisText: analysisText);
+                          medication: medications.firstWhere(
+                            (med) =>
+                                med.id ==
+                                interaction.idMedications[0].toString(),
+                          ),
+                          secondMedicament: medications.firstWhere(
+                            (med) =>
+                                med.id ==
+                                interaction.idMedications[1].toString(),
+                          ),
+                          riskLevel: riskLevel,
+                          analysisText: analysisText,
+                        );
                       },
                     );
                   }
@@ -57,61 +67,69 @@ class InteractionAnalysisPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.read<SearchCubit>().resetState();
-                      Navigator.pushReplacementNamed(
-                        context,
-                        AppRoutes.selectedMedications,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+            BlocBuilder<InteractionCubit, InteractionState>(
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: ElevatedButton(
+                        onPressed: state.pageState == PageState.loading
+                            ? null
+                            : () {
+                                context.read<SearchCubit>().resetState();
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.selectedMedications,
+                                );
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          'Nova análise',
+                          style: GoogleFonts.nunito(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
-                    child: Text(
-                      'Nova análise',
-                      style: GoogleFonts.nunito(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 1,
+                      child: ElevatedButton(
+                        onPressed: state.pageState == PageState.loading
+                            ? null
+                            : () {
+                                Navigator.pop(context);
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          'Voltar',
+                          style: GoogleFonts.nunito(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  flex: 1,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      'Voltar',
-                      style: GoogleFonts.nunito(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -197,17 +215,20 @@ class InteractionAnalysisPage extends StatelessWidget {
 class AnalysisCard extends StatelessWidget {
   const AnalysisCard({
     super.key,
-    required this.medications,
+    required this.medication,
+    required this.secondMedicament,
     required this.riskLevel,
     required this.analysisText,
   });
 
-  final List<MedicamentModel> medications;
+  final MedicamentModel medication;
+  final MedicamentModel secondMedicament;
   final int riskLevel;
   final String analysisText;
 
   @override
   Widget build(BuildContext context) {
+    final medicaments = [medication, secondMedicament];
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       shape: RoundedRectangleBorder(
@@ -229,7 +250,7 @@ class AnalysisCard extends StatelessWidget {
                 children: [
                   // Medicamento 1
                   Text(
-                    medications[0].name,
+                    medication.name,
                     style: GoogleFonts.nunito(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -237,7 +258,7 @@ class AnalysisCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    medications[0].activeSubstance,
+                    medication.activeSubstance,
                     style: GoogleFonts.nunito(
                       fontSize: 14,
                       color: Colors.teal[600],
@@ -275,7 +296,7 @@ class AnalysisCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   // Medicamento 2
                   Text(
-                    medications[1].name,
+                    secondMedicament.name,
                     style: GoogleFonts.nunito(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -283,7 +304,7 @@ class AnalysisCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    medications[1].activeSubstance,
+                    secondMedicament.activeSubstance,
                     style: GoogleFonts.nunito(
                       fontSize: 14,
                       color: Colors.teal[600],
@@ -351,78 +372,89 @@ class AnalysisCard extends StatelessWidget {
                   // Scroll horizontal para medicamentos
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: medications.map((med) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              right: 12.0), // Espaçamento entre cards
-                          child: Container(
-                            width: 220, // Define a largura do card
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.teal[50],
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 4,
-                                  offset: const Offset(2, 2),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  med.name,
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.teal[800],
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Substância ativa: ${med.activeSubstance}',
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 14,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Fabricante: ${med.manufacturer}',
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 14,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Wrap(
-                                  spacing: 8.0,
-                                  runSpacing: 4.0,
-                                  children:
-                                      med.therapeuticClasses.map((className) {
-                                    return Chip(
-                                      label: Text(
-                                        className,
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                      backgroundColor: Colors.teal,
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment
+                            .stretch, // estica os filhos na mesma altura
+                        children: medicaments.map((med) {
+                          return MedicamentCard(medicament: med);
+                        }).toList(),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MedicamentCard extends StatelessWidget {
+  const MedicamentCard({required this.medicament, super.key});
+  final MedicamentModel medicament;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12.0), // Espaçamento entre cards
+      child: Container(
+        width: 220, // Define a largura do card
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.teal[50],
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(2, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              medicament.name,
+              style: GoogleFonts.nunito(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal[800],
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Substância ativa: ${medicament.activeSubstance}',
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Fabricante: ${medicament.manufacturer}',
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: medicament.therapeuticClasses.map((className) {
+                return Chip(
+                  label: Text(
+                    className,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.teal,
+                );
+              }).toList(),
             ),
           ],
         ),
