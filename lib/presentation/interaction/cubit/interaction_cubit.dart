@@ -24,7 +24,7 @@ class InteractionCubit extends Cubit<InteractionState> {
     final response = await _getInteractionUsecase.execute(medicaments);
     final interactions = response.getValueOrNull();
 
-    if (interactions == null) {
+    if (interactions == null || interactions.medications.length <= 1) {
       emit(state.copyWith(pageState: PageState.error));
       return;
     }
