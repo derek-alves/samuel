@@ -14,14 +14,16 @@ class InteractionCubit extends Cubit<InteractionState> {
     required GetInteractionUsecase getInteractionUsecase,
   }) : super(InteractionState.initial()) {
     _getInteractionUsecase = getInteractionUsecase;
-    _verifyInteractions(selectedMedicaments);
+    verifyInteractions(selectedMedicaments);
   }
   late final GetInteractionUsecase _getInteractionUsecase;
 
-  void _verifyInteractions(List<MedicamentModel> medicaments) async {
+  void verifyInteractions([List<MedicamentModel>? medicaments]) async {
     emit(state.copyWith(pageState: PageState.loading));
 
-    final response = await _getInteractionUsecase.execute(medicaments);
+    final response = await _getInteractionUsecase.execute(
+      medicaments ?? state.selectedMedicaments,
+    );
     final interactions = response.getValueOrNull();
 
     if (interactions == null || interactions.medications.length <= 1) {

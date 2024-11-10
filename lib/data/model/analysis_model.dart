@@ -12,22 +12,17 @@ class AnalysisModel {
   });
 
   factory AnalysisModel.fromJson(Map<String, dynamic> json) {
+    final medicaments =
+        List<Map<String, dynamic>>.from(json['medications'] ?? [])
+            .map((med) => MedicamentModel.fromMap(med))
+            .toList();
     return AnalysisModel(
-      medications: List<Map<String, dynamic>>.from(json['medications'] ?? [])
-          .map((med) => MedicamentModel.fromMap(med))
-          .toList(),
+      medications: medicaments,
       interaction: List<Map<String, dynamic>>.from(json['interactions'] ?? [])
-          .map((json) => InteractionModel.fromJson(json))
+          .map((json) => InteractionModel.fromJson(json, medicaments))
           .toList(),
     );
   }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'medications': medications.map((med) => med.toJson()).toList(),
-  //     'interactions': [interaction.toJson()],
-  //   };
-  // }
 }
 
 class InteractionModel {
@@ -37,6 +32,7 @@ class InteractionModel {
   final DateTime? date;
   final String aiModel;
   final List<int> idMedications;
+  final List<MedicamentModel> medications;
 
   InteractionModel({
     required this.id,
@@ -44,17 +40,27 @@ class InteractionModel {
     required this.riskLevel,
     required this.aiModel,
     required this.idMedications,
+    required this.medications,
     this.date,
   });
 
-  factory InteractionModel.fromJson(Map<String, dynamic> json) {
+  factory InteractionModel.fromJson(
+    Map<String, dynamic> json,
+    List<MedicamentModel> medications,
+  ) {
+    List<int> idMedications =
+        List<int>.from(jsonDecode(json['idMedications'] ?? '[]'));
+
     return InteractionModel(
+      medications: medications
+          .where((med) => idMedications.contains(int.parse(med.id)))
+          .toList(),
       id: json['id'] ?? 0,
       analysis: json['analysis']?.toString() ?? '',
       riskLevel: json['riskLevel'] ?? 0,
       date: DateTime.tryParse(json['date']),
       aiModel: json['aiModel'] ?? '',
-      idMedications: List<int>.from(jsonDecode(json['idMedications'] ?? [])),
+      idMedications: idMedications,
     );
   }
 

@@ -40,22 +40,14 @@ class InteractionAnalysisPage extends StatelessWidget {
                       itemCount: analysisData.interaction.length,
                       itemBuilder: (context, index) {
                         final analysis = analysisData;
-                        final medications = analysis.medications;
+
                         final interaction = analysis.interaction[index];
                         final riskLevel = interaction.riskLevel;
                         final analysisText = interaction.analysis;
 
                         return AnalysisCard(
-                          medication: medications.firstWhere(
-                            (med) =>
-                                med.id ==
-                                interaction.idMedications[0].toString(),
-                          ),
-                          secondMedicament: medications.firstWhere(
-                            (med) =>
-                                med.id ==
-                                interaction.idMedications[1].toString(),
-                          ),
+                          medication: interaction.medications[0],
+                          secondMedicament: interaction.medications[1],
                           riskLevel: riskLevel,
                           analysisText: analysisText,
                         );
@@ -122,7 +114,9 @@ class InteractionAnalysisPage extends StatelessWidget {
                           style: GoogleFonts.nunito(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.teal,
+                            color: state.pageState == PageState.loading
+                                ? Colors.white
+                                : Colors.teal,
                           ),
                         ),
                       ),
@@ -188,7 +182,7 @@ class InteractionAnalysisPage extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // context.read<InteractionCubit>().reloadAnalysis();
+              context.read<InteractionCubit>().verifyInteractions();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.teal,
